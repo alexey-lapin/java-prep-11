@@ -5,4 +5,3 @@ pluginManagement {
 }
 
 rootProject.name = "java-prep-11"
-

@@ -8,11 +8,27 @@ repositories {
 }
 
 dependencies {
+    testImplementation("org.assertj:assertj-core:3.18.1")
+    testImplementation("org.openjdk.jol:jol-core:0.14")
+
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.1")
 }
 
 tasks {
+    withType<JavaCompile> {
+        options.encoding = "UTF-8"
+        sourceCompatibility = JavaVersion.VERSION_11.majorVersion
+        targetCompatibility = JavaVersion.VERSION_11.majorVersion
+    }
+
+    withType<Test> {
+        useJUnitPlatform()
+        systemProperty("jdk.attach.allowAttachSelf", "")
+        val output = sourceSets.test.get().java.outputDir
+        systemProperty("test.home", output)
+    }
+
     dependencyUpdates {
         checkConstraints = true
         resolutionStrategy {

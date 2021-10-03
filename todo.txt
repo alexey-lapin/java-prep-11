@@ -1,0 +1,9 @@
+serialization
+- stream end handling
+- writeObject readObject
+- writeReplace readResolve
+- serialVersionUID
+- caching
+
+nio
+- ByteBuffer read write flip compact
