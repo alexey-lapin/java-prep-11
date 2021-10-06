@@ -2,6 +2,8 @@ package com.github.alexeylapin.ocp.concurrency;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
@@ -10,6 +12,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowableOfType;
@@ -277,7 +281,7 @@ public class ThreadTest {
             assertThat(result.isDone()).isFalse();
             assertThat(result.isCancelled()).isFalse();
 
-            result.cancel(true);
+            assertThat(result.cancel(true)).isTrue();
 
             assertThat(result.isDone()).isTrue();
             assertThat(result.isCancelled()).isTrue();
@@ -291,8 +295,103 @@ public class ThreadTest {
 
     }
 
+    @Test
+    void name11() throws ExecutionException, InterruptedException {
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        try {
+            println("starting");
+            Future<Integer> result = executorService.submit(new SleepingCallable<>(1, 4000));
+
+            assertThat(result.isDone()).isFalse();
+            assertThat(result.isCancelled()).isFalse();
+
+            assertThat(result.get()).isEqualTo(1);
+
+            assertThat(result.cancel(true)).isFalse();
+
+            assertThat(result.isDone()).isTrue();
+            assertThat(result.isCancelled()).isFalse();
+
+            assertThat(result.get()).isEqualTo(1);
+        } finally {
+            println("finalizing");
+            executorService.shutdown();
+        }
+
+    }
+
+    // Scheduling
+
+
+    @Test
+    void name12() throws InterruptedException {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        try {
+            println("starting");
+            executorService.schedule(() -> println("executing 1"), 3, TimeUnit.SECONDS);
+            executorService.schedule(() -> println("executing 2"), 3, TimeUnit.SECONDS);
+        } finally {
+            println("finalizing");
+            executorService.shutdown();
+            boolean terminated = executorService.awaitTermination(10, TimeUnit.SECONDS);
+            assertThat(terminated).isTrue();
+        }
+    }
+
+    @Test
+    void name13() throws InterruptedException {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        try {
+            println("starting");
+            executorService.schedule(() -> println("executing 1"), 3, TimeUnit.SECONDS);
+            executorService.schedule(() -> 5, 3, TimeUnit.SECONDS);
+        } finally {
+            println("finalizing");
+            executorService.shutdown();
+            boolean terminated = executorService.awaitTermination(10, TimeUnit.SECONDS);
+            assertThat(terminated).isTrue();
+        }
+    }
+
+    @Test
+    void name14() throws InterruptedException {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        try {
+            println("starting");
+            executorService.scheduleAtFixedRate(() -> println("executing"), 1, 2, TimeUnit.SECONDS);
+            new SleepingRunnable(8000).run();
+        } finally {
+            println("finalizing");
+            executorService.shutdown();
+            boolean terminated = executorService.awaitTermination(10, TimeUnit.SECONDS);
+            assertThat(terminated).isTrue();
+        }
+    }
+
+    @Test
+    void name15() throws InterruptedException {
+        ScheduledExecutorService executorService = Executors.newSingleThreadScheduledExecutor();
+
+        try {
+            println("starting");
+            executorService.scheduleWithFixedDelay(() -> println("executing"), 1, 2, TimeUnit.SECONDS);
+            new SleepingRunnable(8000).run();
+        } finally {
+            println("finalizing");
+            executorService.shutdown();
+            boolean terminated = executorService.awaitTermination(10, TimeUnit.SECONDS);
+            assertThat(terminated).isTrue();
+        }
+    }
+
+    public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+
     public static void println(String message) {
-        System.out.println(Thread.currentThread() + " - " + message);
+        System.out.println(FORMATTER.format(LocalDateTime.now()) + " " + Thread.currentThread() + " - " + message);
     }
 
 }
