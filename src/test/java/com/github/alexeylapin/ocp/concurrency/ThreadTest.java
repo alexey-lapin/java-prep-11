@@ -13,6 +13,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -387,6 +388,22 @@ public class ThreadTest {
             assertThat(terminated).isTrue();
         }
     }
+
+    // Pools
+    {
+        Executors.newSingleThreadExecutor();
+        Executors.newSingleThreadExecutor(Executors.defaultThreadFactory());
+        Executors.newSingleThreadScheduledExecutor();
+        Executors.newSingleThreadScheduledExecutor(Executors.defaultThreadFactory());
+        Executors.newFixedThreadPool(5);
+        Executors.newFixedThreadPool(5, Executors.defaultThreadFactory());
+        Executors.newCachedThreadPool();
+        Executors.newCachedThreadPool(Executors.defaultThreadFactory());
+        Executors.newScheduledThreadPool(5);
+        Executors.newScheduledThreadPool(5, Executors.defaultThreadFactory());
+    }
+
+
 
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
