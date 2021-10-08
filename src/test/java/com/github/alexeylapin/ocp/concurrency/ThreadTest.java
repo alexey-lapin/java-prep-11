@@ -404,7 +404,6 @@ public class ThreadTest {
     }
 
 
-
     public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
 
     public static void println(String message) {
