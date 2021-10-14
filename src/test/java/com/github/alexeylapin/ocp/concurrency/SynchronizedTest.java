@@ -1,5 +1,6 @@
 package com.github.alexeylapin.ocp.concurrency;
 
+import com.github.alexeylapin.ocp.concurrency.support.Support;
 import org.junit.jupiter.api.Test;
 
 import java.util.concurrent.ExecutorService;
@@ -19,7 +20,7 @@ public class SynchronizedTest {
         }
 
         public void incrementAndReport() {
-            ThreadTest.println(++counter + " ");
+            Support.println(++counter + " ");
         }
 
     }
@@ -28,12 +29,8 @@ public class SynchronizedTest {
 
         private int counter = 0;
 
-        public int getCounter() {
-            return counter;
-        }
-
         public synchronized void incrementAndReport() {
-            ThreadTest.println(++counter + " ");
+            Support.println(++counter + " ");
         }
 
     }
@@ -70,7 +67,6 @@ public class SynchronizedTest {
             boolean terminated = executorService.awaitTermination(10, TimeUnit.SECONDS);
             assertThat(terminated).isTrue();
         }
-        System.out.println("finish");
     }
 
 }
