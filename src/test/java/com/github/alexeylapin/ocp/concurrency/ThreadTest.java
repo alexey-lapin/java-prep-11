@@ -1,7 +1,7 @@
 package com.github.alexeylapin.ocp.concurrency;
 
 import com.github.alexeylapin.ocp.concurrency.support.SleepingCallable;
-import com.github.alexeylapin.ocp.concurrency.support.SleepingRunnable;
+import com.github.alexeylapin.ocp.concurrency.support.LoggingSleepingRunnable;
 import com.github.alexeylapin.ocp.concurrency.support.Support;
 import org.junit.jupiter.api.Test;
 
@@ -121,9 +121,9 @@ public class ThreadTest {
         try {
             Support.println("starting");
 
-            executorService.execute(new SleepingRunnable(Duration.ofMillis(4000)));
-            executorService.execute(new SleepingRunnable(Duration.ofMillis(2000)));
-            executorService.execute(new SleepingRunnable(Duration.ofMillis(1000)));
+            executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(4000)));
+            executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(2000)));
+            executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(1000)));
 
             assertThat(executorService.isShutdown()).isFalse();
             assertThat(executorService.isTerminated()).isFalse();
@@ -136,11 +136,11 @@ public class ThreadTest {
         assertThat(executorService.isTerminated()).isFalse();
 
         Exception exception = catchThrowableOfType(
-                () -> executorService.execute(new SleepingRunnable(Duration.ofMillis(3000))),
+                () -> executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(3000))),
                 RejectedExecutionException.class);
         assertThat(exception).isNotNull();
 
-        new SleepingRunnable(Duration.ofMillis(10000)).run();
+        new LoggingSleepingRunnable(Duration.ofMillis(10000)).run();
         assertThat(executorService.isShutdown()).isTrue();
         assertThat(executorService.isTerminated()).isTrue();
     }
@@ -155,9 +155,9 @@ public class ThreadTest {
         try {
             Support.println("starting");
 
-            executorService.execute(new SleepingRunnable(Duration.ofMillis(4000)));
-            executorService.execute(new SleepingRunnable(Duration.ofMillis(2000)));
-            executorService.execute(new SleepingRunnable(Duration.ofMillis(1000)));
+            executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(4000)));
+            executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(2000)));
+            executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(1000)));
 
             assertThat(executorService.isShutdown()).isFalse();
             assertThat(executorService.isTerminated()).isFalse();
@@ -171,11 +171,11 @@ public class ThreadTest {
         assertThat(executorService.isTerminated()).isFalse();
 
         Exception exception = catchThrowableOfType(
-                () -> executorService.execute(new SleepingRunnable(Duration.ofMillis(3000))),
+                () -> executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(3000))),
                 RejectedExecutionException.class);
         assertThat(exception).isNotNull();
 
-        new SleepingRunnable(Duration.ofMillis(10000)).run();
+        new LoggingSleepingRunnable(Duration.ofMillis(10000)).run();
         assertThat(executorService.isShutdown()).isTrue();
         assertThat(executorService.isTerminated()).isTrue();
     }
@@ -199,7 +199,7 @@ public class ThreadTest {
         assertThat(executorService.isTerminated()).isTrue();
 
         Exception exception = catchThrowableOfType(
-                () -> executorService.execute(new SleepingRunnable(Duration.ofMillis(3000))),
+                () -> executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(3000))),
                 RejectedExecutionException.class);
         assertThat(exception).isNotNull();
     }
@@ -224,7 +224,7 @@ public class ThreadTest {
         assertThat(executorService.isTerminated()).isTrue();
 
         Exception exception = catchThrowableOfType(
-                () -> executorService.execute(new SleepingRunnable(Duration.ofMillis(3000))),
+                () -> executorService.execute(new LoggingSleepingRunnable(Duration.ofMillis(3000))),
                 RejectedExecutionException.class);
         assertThat(exception).isNotNull();
     }
@@ -322,7 +322,7 @@ public class ThreadTest {
         try {
             Support.println("starting");
             executorService.scheduleAtFixedRate(() -> Support.println("executing"), 1, 2, TimeUnit.SECONDS);
-            new SleepingRunnable(Duration.ofMillis(8000)).run();
+            new LoggingSleepingRunnable(Duration.ofMillis(8000)).run();
         } finally {
             Support.println("finalizing");
             executorService.shutdown();
@@ -338,7 +338,7 @@ public class ThreadTest {
         try {
             Support.println("starting");
             executorService.scheduleWithFixedDelay(() -> Support.println("executing"), 1, 2, TimeUnit.SECONDS);
-            new SleepingRunnable(Duration.ofMillis(8000)).run();
+            new LoggingSleepingRunnable(Duration.ofMillis(8000)).run();
         } finally {
             Support.println("finalizing");
             executorService.shutdown();

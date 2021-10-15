@@ -4,7 +4,7 @@ import java.time.Duration;
 
 public class SleepingRunnable implements Runnable {
 
-    private final long millis;
+    protected final long millis;
 
     public SleepingRunnable(Duration duration) {
         this.millis = duration.toMillis();
@@ -13,13 +13,22 @@ public class SleepingRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            Support.println("sleeping for " + millis);
+            onBefore();
             Thread.sleep(millis);
-            Support.println("wake up");
+            onAfter();
         } catch (InterruptedException e) {
-            Support.println("interrupted");
+            onInterrupt(e);
             Thread.currentThread().interrupt();
         }
+    }
+
+    void onBefore() {
+    }
+
+    void onAfter() {
+    }
+
+    void onInterrupt(InterruptedException e) {
     }
 
 }
