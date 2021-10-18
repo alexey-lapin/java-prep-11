@@ -1,6 +1,7 @@
 package com.github.alexeylapin.ocp.concurrency;
 
 import com.github.alexeylapin.ocp.concurrency.support.SleepingRunnable;
+import com.github.alexeylapin.ocp.concurrency.support.Support;
 import org.junit.jupiter.api.Test;
 
 import java.time.Duration;
@@ -56,17 +57,17 @@ public class CyclicBarrierTest {
         }
 
         private void setUp() {
-            new SleepingRunnable(randomDuration()).run();
+            new SleepingRunnable(Support.randomDuration(0, 6)).run();
             println("set up done");
         }
 
         private void execute() {
-            new SleepingRunnable(randomDuration()).run();
+            new SleepingRunnable(Support.randomDuration(0, 6)).run();
             println("execute done");
         }
 
         private void tearDown() {
-            new SleepingRunnable(randomDuration()).run();
+            new SleepingRunnable(Support.randomDuration(0, 6)).run();
             println("tear down done");
         }
 
@@ -76,10 +77,6 @@ public class CyclicBarrierTest {
             execute();
             b2.await();
             tearDown();
-        }
-
-        private static Duration randomDuration() {
-            return Duration.ofSeconds(ThreadLocalRandom.current().nextInt(0, 6));
         }
 
     }
