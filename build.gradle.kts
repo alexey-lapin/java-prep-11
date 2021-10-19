@@ -8,6 +8,8 @@ repositories {
 }
 
 dependencies {
+    testImplementation("com.h2database:h2:1.4.200")
+
     testImplementation("org.assertj:assertj-core:3.21.0")
     testImplementation("org.openjdk.jol:jol-core:0.16")
 
