@@ -6,7 +6,6 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class FileTest {
 
