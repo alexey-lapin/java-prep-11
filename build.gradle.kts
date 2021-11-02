@@ -27,8 +27,8 @@ tasks {
     withType<Test> {
         useJUnitPlatform()
         systemProperty("jdk.attach.allowAttachSelf", "")
-        val output = sourceSets.test.get().java.outputDir
-        systemProperty("test.home", output)
+        systemProperty("gradle.build.dir", project.buildDir.toString())
+        systemProperty("gradle.src.test.java.dir", sourceSets.test.get().java.srcDirs.first().toString())
     }
 
     dependencyUpdates {
