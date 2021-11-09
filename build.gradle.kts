@@ -9,6 +9,7 @@ repositories {
 
 dependencies {
     testImplementation("com.h2database:h2:1.4.200")
+    testImplementation("com.google.jimfs:jimfs:1.2")
 
     testImplementation("org.assertj:assertj-core:3.21.0")
     testImplementation("org.openjdk.jol:jol-core:0.16")
@@ -29,6 +30,16 @@ tasks {
         systemProperty("jdk.attach.allowAttachSelf", "")
         systemProperty("gradle.build.dir", project.buildDir.toString())
         systemProperty("gradle.src.test.java.dir", sourceSets.test.get().java.srcDirs.first().toString())
+    }
+
+    register<JavaExec>("runTestMain") {
+        val packagePrefix = "com.github.alexeylapin.ocp"
+        var testMainClass = project.findProperty("mainClass") as String
+        testMainClass = if (testMainClass.startsWith(".")) packagePrefix + testMainClass else testMainClass
+        mainClass.set(testMainClass)
+        standardInput = System.`in`
+        standardOutput = System.out
+        classpath += sourceSets.test.get().runtimeClasspath
     }
 
     dependencyUpdates {
