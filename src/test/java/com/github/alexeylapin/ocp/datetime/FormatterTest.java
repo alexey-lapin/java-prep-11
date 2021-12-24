@@ -23,7 +23,7 @@ public class FormatterTest {
         assertThat(formatter.format(localDate)).isEqualTo("2022-05-05");
 
         LocalTime localTime = LocalTime.of(16, 20, 0);
-        // TemporalAccessor must contain year, month, and date info
+        // TemporalAccessor must contain year, month, and day info
         assertThatExceptionOfType(UnsupportedTemporalTypeException.class)
                 .isThrownBy(() -> formatter.format(localTime));
     }
@@ -39,6 +39,32 @@ public class FormatterTest {
         // TemporalAccessor must contain hour, minute, and second info
         assertThatExceptionOfType(UnsupportedTemporalTypeException.class)
                 .isThrownBy(() -> formatter.format(localDate));
+    }
+
+    @Test
+    void customFormatYear() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+
+        LocalDate localDate = LocalDate.of(2022, 5, 5);
+        assertThat(formatter.format(localDate)).isEqualTo("2022");
+
+        LocalTime localTime = LocalTime.of(16, 20, 0);
+        // TemporalAccessor must contain year info
+        assertThatExceptionOfType(UnsupportedTemporalTypeException.class)
+                .isThrownBy(() -> formatter.format(localTime));
+    }
+
+    @Test
+    void customFormat() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        LocalDateTime localDateTime = LocalDateTime.of(2022, 5, 5, 16, 20, 0);
+        assertThat(formatter.format(localDateTime)).isEqualTo("2022-05-05 16:20:00");
+
+        LocalTime localTime = LocalTime.of(16, 20, 0);
+        // TemporalAccessor must contain year, month, and day info
+        assertThatExceptionOfType(UnsupportedTemporalTypeException.class)
+                .isThrownBy(() -> formatter.format(localTime));
     }
 
 }
