@@ -2,6 +2,8 @@ package com.github.alexeylapin.ocp.classes;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.function.Supplier;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EnumTest {
@@ -17,12 +19,23 @@ public class EnumTest {
     }
 
     @Test
+    void simpleEnumValueOf() {
+        assertThat(TestEnum2.valueOf("ITEM_2")).isEqualTo(TestEnum2.ITEM_2);
+    }
+
+    @Test
     void enumWithFields() {
         assertThat(TestEnum3.ITEM_1.getInfo()).isEqualTo("item-1");
 
         TestEnum3.ITEM_1.setInfo("override");
 
         assertThat(TestEnum3.ITEM_1.getInfo()).isEqualTo("override");
+    }
+
+    @Test
+    void enumImplementingInterface() {
+        assertThat(TestEnum4.ITEM1.get()).isEqualTo("item-1");
+        assertThat(TestEnum4.ITEM2.get()).isEqualTo("item-2");
     }
 
     enum TestEnum1 {
@@ -50,6 +63,23 @@ public class EnumTest {
         // however it is possible to have mutable enum items
         public void setInfo(String info) {
             this.info = info;
+        }
+
+    }
+
+    enum TestEnum4 implements Supplier<String> {
+
+        ITEM1 {
+            @Override
+            public String get() {
+                return "item-1";
+            }
+        },
+        ITEM2 {
+            @Override
+            public String get() {
+                return "item-2";
+            }
         }
 
     }
