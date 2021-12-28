@@ -10,7 +10,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class FileTest {
 
     @Test
-    void name() {
+    void waysToGetFileSeparator() {
         String fs1 = System.getProperty("file.separator");
         String fs2 = File.separator;
 
@@ -18,11 +18,8 @@ public class FileTest {
     }
 
     @Test
-    void name2(@TempDir File tempDir) {
-        System.out.println(tempDir);
-
+    void fileExistenceTest(@TempDir File tempDir) {
         String srcTestJavaDir = System.getProperty("gradle.src.test.java.dir");
-        System.out.println(srcTestJavaDir);
 
         File f1 = new File("qwer");
         File f2 = new File("README.md");
@@ -40,7 +37,7 @@ public class FileTest {
     }
 
     @Test
-    void name3() {
+    void filePropertiesTest() {
         File file = new File("README.md");
 
         assertThat(file.isFile()).isTrue();
@@ -54,7 +51,7 @@ public class FileTest {
     }
 
     @Test
-    void name4(@TempDir File temp) {
+    void creatingAndDeletingTest(@TempDir File temp) {
         assertThat(temp.exists()).isTrue();
         assertThat(temp.isDirectory()).isTrue();
         assertThat(temp.mkdir()).isFalse();
