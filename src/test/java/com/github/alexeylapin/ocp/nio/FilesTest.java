@@ -21,12 +21,12 @@ import static org.assertj.core.api.Assertions.assertThatCode;
 public class FilesTest {
 
     @Test
-    void name1() {
+    void fileExistenceTest() {
         assertThat(Files.exists(Path.of("README.md"))).isTrue();
     }
 
     @Test
-    void name2() {
+    void should_throwNoSuchFileException_when_testingForSameFileAndFileDoesNotExist() {
         try {
             Files.isSameFile(Path.of("README.md"), Path.of("fake.txt"));
         } catch (IOException e) {
@@ -35,7 +35,7 @@ public class FilesTest {
     }
 
     @Test
-    void name3() {
+    void should_notThrowNoSuchFileException_when_testingForSameFileAndPathIsTheSame() {
         try {
             assertThat(Files.isSameFile(Path.of("fake.txt"), Path.of("fake.txt"))).isTrue();
         } catch (IOException e) {
@@ -44,7 +44,7 @@ public class FilesTest {
     }
 
     @Test
-    void name4(@TempDir Path temp) {
+    void should_notThrow_when_creatingDirectoryInExistingDirectory(@TempDir Path temp) {
         assertThat(Files.exists(temp)).isTrue();
 
         Path sub1 = temp.resolve("sub1");
@@ -53,7 +53,7 @@ public class FilesTest {
     }
 
     @Test
-    void name5(@TempDir Path temp) {
+    void should_throw_when_creatingDirectoryInNonExistingDirectory(@TempDir Path temp) {
         assertThat(Files.exists(temp)).isTrue();
         assertThat(Files.isRegularFile(temp)).isFalse();
         assertThat(Files.isDirectory(temp)).isTrue();
@@ -71,7 +71,7 @@ public class FilesTest {
     }
 
     @Test
-    void name6(@TempDir Path temp) {
+    void copyDirectoryTest(@TempDir Path temp) {
         Path sub1 = temp.resolve("sub1");
         Path sub2 = temp.resolve("sub2");
         assertThat(Files.exists(sub2)).isFalse();
@@ -89,7 +89,7 @@ public class FilesTest {
     }
 
     @Test
-    void name7(@TempDir Path temp) {
+    void copyRegularFileTest(@TempDir Path temp) {
         Path sub1 = temp.resolve("sub1");
         Path sub2 = temp.resolve("sub2");
         assertThat(Files.exists(sub2)).isFalse();
@@ -107,7 +107,7 @@ public class FilesTest {
     }
 
     @Test
-    void name8(@TempDir Path temp) {
+    void moveDirectoryTest(@TempDir Path temp) {
         Path sub1 = temp.resolve("sub1");
         Path sub2 = temp.resolve("sub2");
         assertThat(Files.exists(sub2)).isFalse();
@@ -125,7 +125,7 @@ public class FilesTest {
     }
 
     @Test
-    void name9(@TempDir Path temp) {
+    void moveRegularFileTest(@TempDir Path temp) {
         Path sub1 = temp.resolve("sub1");
         Path sub2 = temp.resolve("sub2");
         assertThat(Files.exists(sub2)).isFalse();
@@ -143,7 +143,7 @@ public class FilesTest {
     }
 
     @Test
-    void name10(@TempDir Path temp) {
+    void deleteRegularFileTest(@TempDir Path temp) {
         Path path = temp.resolve("fake.txt");
 
         assertThatCode(() -> Files.delete(path)).isExactlyInstanceOf(NoSuchFileException.class);
@@ -155,7 +155,7 @@ public class FilesTest {
     }
 
     @Test
-    void name11(@TempDir Path temp) {
+    void writeAndReadTest(@TempDir Path temp) {
         Path path = temp.resolve("file.txt");
         try (var writer = Files.newBufferedWriter(path)) {
             writer.write("string1");
@@ -174,7 +174,7 @@ public class FilesTest {
     }
 
     @Test
-    void name12(@TempDir Path temp) {
+    void fileAttributesTest(@TempDir Path temp) {
         assertThat(Files.isRegularFile(temp)).isFalse();
         assertThat(Files.isDirectory(temp)).isTrue();
         assertThat(Files.isSymbolicLink(temp)).isFalse();
@@ -190,7 +190,7 @@ public class FilesTest {
     }
 
     @Test
-    void name13(@TempDir Path temp) {
+    void basicFileAttributesTest(@TempDir Path temp) {
         try {
             BasicFileAttributes attributes = Files.readAttributes(temp, BasicFileAttributes.class);
             assertThat(attributes.isRegularFile()).isFalse();
@@ -203,7 +203,7 @@ public class FilesTest {
     }
 
     @Test
-    void name14(@TempDir Path temp) {
+    void basicFileAttributeViewTest(@TempDir Path temp) {
         BasicFileAttributeView view = Files.getFileAttributeView(temp, BasicFileAttributeView.class);
         assertThat(view.name()).isEqualTo("basic");
         try {
@@ -214,7 +214,7 @@ public class FilesTest {
     }
 
     @Test
-    void name15() {
+    void filesListTest() {
         try (Stream<Path> stream = Files.list(Path.of(""))) {
             stream.forEach(System.out::println);
         } catch (IOException e) {
@@ -231,7 +231,7 @@ public class FilesTest {
     }
 
     @Test
-    void name16() {
+    void filesWalkTest() {
         try (Stream<Path> stream = Files.walk(Path.of(""))) {
             long sum = stream.peek(System.out::println)
                     .filter(Files::isRegularFile)
@@ -244,7 +244,7 @@ public class FilesTest {
     }
 
     @Test
-    void name17() {
+    void filesFindTest() {
         try (Stream<Path> stream = Files.find(
                 Path.of(""),
                 Integer.MAX_VALUE,
